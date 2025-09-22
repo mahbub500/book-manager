@@ -12,15 +12,8 @@ use BookManager\Functions\Hook;
  */
 class Publisher {
 	use Hook;
-
-
-
-	   
-
-    
-
-
 	public function render_publishers_page() {
+		$publishers = $this->get_publishers();
 	    ?>
 	    <div class="wrap">
 		    <h1>Publisher Manager</h1>
@@ -31,13 +24,48 @@ class Publisher {
 			    <a href="javascript:void(0);" class="nav-tab" data-tab="bm-publisher-add">Add Publisher</a>
 			</h2>
 
-
-
-		    <!-- Tab Content -->
-		    <div id="bm-publisher-list" class="tab-content" style="display:block;">
-		        <h3>List of Publishers</h3>
-		        <p>List of all publishers will go here.</p>
-		    </div>
+		    <!-- Publisher List Table -->
+	        <div id="bm-publisher-list" class="tab-content" style="display:block;">
+	            <h3>List of Publishers</h3>
+	            <table class="wp-list-table widefat fixed striped">
+	                <thead>
+	                    <tr>
+	                        <th>Name</th>
+	                        <th>Email</th>
+	                        <th>Logo</th>
+	                        <th>Actions</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <?php if (!empty($publishers)) : ?>
+	                        <?php foreach ($publishers as $publisher) : 
+	                            $email = get_post_meta($publisher->ID, 'publisher_email', true);
+	                            $logo_id = get_post_meta($publisher->ID, 'publisher_logo', true);
+	                            $logo_url = $logo_id ? wp_get_attachment_url($logo_id) : '';
+	                        ?>
+	                            <tr>
+	                                <td><?php echo esc_html($publisher->post_title); ?></td>
+	                                <td><?php echo esc_html($email); ?></td>
+	                                <td>
+	                                    <?php if ($logo_url) : ?>
+	                                        <img src="<?php echo esc_url($logo_url); ?>" alt="" width="50">
+	                                    <?php endif; ?>
+	                                </td>
+	                                <td>
+	                                    <!-- You can add Edit/Delete buttons here -->
+	                                    <button class="button button-small">Edit</button>
+	                                    <button class="button button-small">Delete</button>
+	                                </td>
+	                            </tr>
+	                        <?php endforeach; ?>
+	                    <?php else: ?>
+	                        <tr>
+	                            <td colspan="4">No publishers found.</td>
+	                        </tr>
+	                    <?php endif; ?>
+	                </tbody>
+	            </table>
+	        </div>
 
 		    <div id="bm-publisher-add" class="tab-content" style="display:none;">
 		        <h3>Add Publisher</h3>
