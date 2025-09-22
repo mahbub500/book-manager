@@ -13,7 +13,7 @@ class BookPostType {
         register_post_type('book', [
             'label' => 'Books',
             'public' => true,
-            'show_ui' => true,
+            'show_ui' => false,
             'menu_icon' => 'dashicons-book',
             'supports' => ['title', 'editor', 'thumbnail'],
         ]);
@@ -23,7 +23,7 @@ class BookPostType {
             'label' => 'Publisher',
             'public' => true,
             'hierarchical' => true,
-            'show_ui' => true,
+            'show_ui' => false,
         ]);
 
         // Author taxonomy
@@ -31,7 +31,7 @@ class BookPostType {
             'label' => 'Author',
             'public' => true,
             'hierarchical' => true,
-            'show_ui' => true,
+            'show_ui' => false,
         ]);
     }
 
@@ -40,7 +40,7 @@ class BookPostType {
         register_post_type('publisher', [
             'label' => 'Publishers',
             'public' => true,
-            'show_ui' => true,
+            'show_ui' => false,
             'menu_icon' => 'dashicons-building',
             'supports' => ['title'],
         ]);
@@ -51,7 +51,7 @@ class BookPostType {
         register_post_type('author', [
             'label' => 'Authors',
             'public' => true,
-            'show_ui' => true,
+            'show_ui' => false,
             'menu_icon' => 'dashicons-admin-users',
             'supports' => ['title'],
         ]);

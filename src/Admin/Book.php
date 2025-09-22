@@ -16,10 +16,11 @@ class Book {
             <h1>Book Manager</h1>
 
             <!-- Tab Navigation -->
-            <h2 class="nav-tab-wrapper">
+            <h2 id="book-tabs" class="nav-tab-wrapper">
                 <a href="javascript:void(0);" class="nav-tab nav-tab-active" data-tab="book-list">Book List</a>
                 <a href="javascript:void(0);" class="nav-tab" data-tab="add-book">Add Book</a>
             </h2>
+
 
             <!-- Tab Content -->
             <div id="book-list" class="tab-content" style="display:block;">

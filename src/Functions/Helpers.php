@@ -18,7 +18,9 @@ class Helpers {
         $submenus = [
             'book-manager-add',
             'book-manager-settings',
-            'book-manager-reports'
+            'book-manager-reports',
+            'book-manager-publishers',
+            'book-manager-authors',
         ];
 
         foreach ($submenus as $slug) {
