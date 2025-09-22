@@ -27,11 +27,72 @@ class Book {
             <a href="javascript:void(0);" class="nav-tab" data-tab="add-book">Add Book</a>
         </h2>
 
-        <!-- Book List -->
-        <div id="book-list" class="tab-content" style="display:block;">
-            <h3>Book List</h3>
-            <p>List of all books will go here.</p>
-        </div>
+            <!-- Book List -->
+    <!-- Book List -->
+    <div id="book-list" class="tab-content" style="display:block;">
+        <h3><?php esc_html_e( 'Book List', 'book-manager' ); ?></h3>
+
+        <?php
+        $books = get_books();
+
+        if ( ! empty( $books ) ) : ?>
+            <table class="widefat fixed striped">
+                <thead>
+                    <tr>
+                        <th><?php esc_html_e( 'ID', 'book-manager' ); ?></th>
+                        <th><?php esc_html_e( 'Image', 'book-manager' ); ?></th>
+                        <th><?php esc_html_e( 'Book Name', 'book-manager' ); ?></th>
+                        <th><?php esc_html_e( 'Author', 'book-manager' ); ?></th>
+                        <th><?php esc_html_e( 'Publisher', 'book-manager' ); ?></th>
+                        <th><?php esc_html_e( 'Price', 'book-manager' ); ?></th>
+                        <th><?php esc_html_e( 'ISBN', 'book-manager' ); ?></th>
+                        <th><?php esc_html_e( 'Year', 'book-manager' ); ?></th>
+                        <th><?php esc_html_e( 'Actions', 'book-manager' ); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ( $books as $book ) : 
+                        $author_id    = get_post_meta( $book->ID, 'book_author', true );
+                        $publisher_id = get_post_meta( $book->ID, 'book_publisher', true );
+                        $price        = get_post_meta( $book->ID, 'book_price', true );
+                        $isbn         = get_post_meta( $book->ID, 'book_isbn', true );
+                        $year         = get_post_meta( $book->ID, 'book_year', true );
+                        $image_id     = get_post_meta( $book->ID, 'book_image', true );
+
+                        $author_name    = $author_id ? get_the_title( $author_id ) : '';
+                        $publisher_name = $publisher_id ? get_the_title( $publisher_id ) : '';
+                        $image_url      = $image_id ? wp_get_attachment_image_url( $image_id, 'thumbnail' ) : '';
+                    ?>
+                        <tr>
+                            <td><?php echo esc_html( $book->ID ); ?></td>
+                            <td>
+                                <?php if ( $image_url ) : ?>
+                                    <img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( get_the_title( $book->ID ) ); ?>" width="50" height="50">
+                                <?php else : ?>
+                                    <span><?php esc_html_e( 'No Image', 'book-manager' ); ?></span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo esc_html( get_the_title( $book->ID ) ); ?></td>
+                            <td><?php echo esc_html( $author_name ); ?></td>
+                            <td><?php echo esc_html( $publisher_name ); ?></td>
+                            <td><?php echo esc_html( $price ); ?></td>
+                            <td><?php echo esc_html( $isbn ); ?></td>
+                            <td><?php echo esc_html( $year ); ?></td>
+                            <td>
+                                <a href="<?php echo esc_url( add_query_arg( [ 'action' => 'edit', 'book_id' => $book->ID ] ) ); ?>" class="button button-small"><?php esc_html_e( 'Edit', 'book-manager' ); ?></a>
+                                <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'delete', 'book_id' => $book->ID ] ), 'bm_delete_book_' . $book->ID ) ); ?>" class="button button-small button-danger" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this book?', 'book-manager' ); ?>');"><?php esc_html_e( 'Delete', 'book-manager' ); ?></a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else : ?>
+            <p><?php esc_html_e( 'No books found.', 'book-manager' ); ?></p>
+        <?php endif; ?>
+    </div>
+
+
+
 
         <!-- Add Book Form -->
         <div id="add-book" class="tab-content" style="display:none;">
@@ -156,26 +217,7 @@ class Book {
         }
 
         return $book_id;
-    }
-
-    /**
-     * Get all books.
-     *
-     * @param array $args Optional. Additional query arguments.
-     *
-     * @return array Array of WP_Post objects.
-     */
-    public function get_books( $args = [] ) {
-        $default_args = [
-            'post_type'   => 'book',
-            'post_status' => 'publish',
-            'numberposts' => -1,
-        ];
-
-        $query_args = wp_parse_args( $args, $default_args );
-
-        return get_posts( $query_args );
-    }    
+    }  
 
     /**
      * Get single book by ID.

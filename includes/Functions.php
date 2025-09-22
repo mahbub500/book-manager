@@ -102,3 +102,20 @@ if ( ! function_exists( 'get_authors' ) ) {
         );
     }
 }
+
+/**
+ * Get all books.
+ *
+ * @return array Array of WP_Post objects.
+ */
+if ( ! function_exists( 'get_books' ) ) {
+    function get_books() {
+        return get_posts(
+            [
+                'post_type'   => 'book',
+                'post_status'    => 'publish',
+                'numberposts' => -1,
+            ]
+        );
+    }
+}
