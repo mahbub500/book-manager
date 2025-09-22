@@ -40,13 +40,13 @@ class Book {
                 <thead>
                     <tr>
                         <th><?php esc_html_e( 'ID', 'book-manager' ); ?></th>
-                        <th><?php esc_html_e( 'Image', 'book-manager' ); ?></th>
                         <th><?php esc_html_e( 'Book Name', 'book-manager' ); ?></th>
                         <th><?php esc_html_e( 'Author', 'book-manager' ); ?></th>
                         <th><?php esc_html_e( 'Publisher', 'book-manager' ); ?></th>
                         <th><?php esc_html_e( 'Price', 'book-manager' ); ?></th>
                         <th><?php esc_html_e( 'ISBN', 'book-manager' ); ?></th>
                         <th><?php esc_html_e( 'Year', 'book-manager' ); ?></th>
+                        <th><?php esc_html_e( 'Image', 'book-manager' ); ?></th>
                         <th><?php esc_html_e( 'Actions', 'book-manager' ); ?></th>
                     </tr>
                 </thead>
@@ -65,6 +65,12 @@ class Book {
                     ?>
                         <tr>
                             <td><?php echo esc_html( $book->ID ); ?></td>
+                            <td><?php echo esc_html( get_the_title( $book->ID ) ); ?></td>
+                            <td><?php echo esc_html( $author_name ); ?></td>
+                            <td><?php echo esc_html( $publisher_name ); ?></td>
+                            <td><?php echo esc_html( $price ); ?></td>
+                            <td><?php echo esc_html( $isbn ); ?></td>
+                            <td><?php echo esc_html( $year ); ?></td>
                             <td>
                                 <?php if ( $image_url ) : ?>
                                     <img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( get_the_title( $book->ID ) ); ?>" width="50" height="50">
@@ -72,12 +78,6 @@ class Book {
                                     <span><?php esc_html_e( 'No Image', 'book-manager' ); ?></span>
                                 <?php endif; ?>
                             </td>
-                            <td><?php echo esc_html( get_the_title( $book->ID ) ); ?></td>
-                            <td><?php echo esc_html( $author_name ); ?></td>
-                            <td><?php echo esc_html( $publisher_name ); ?></td>
-                            <td><?php echo esc_html( $price ); ?></td>
-                            <td><?php echo esc_html( $isbn ); ?></td>
-                            <td><?php echo esc_html( $year ); ?></td>
                             <td>
                                 <a href="<?php echo esc_url( add_query_arg( [ 'action' => 'edit', 'book_id' => $book->ID ] ) ); ?>" class="button button-small"><?php esc_html_e( 'Edit', 'book-manager' ); ?></a>
                                 <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'delete', 'book_id' => $book->ID ] ), 'bm_delete_book_' . $book->ID ) ); ?>" class="button button-small button-danger" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this book?', 'book-manager' ); ?>');"><?php esc_html_e( 'Delete', 'book-manager' ); ?></a>
