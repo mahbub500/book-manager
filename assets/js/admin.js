@@ -36,7 +36,7 @@ jQuery(document).ready(function($) {
         var formData = new FormData();
         formData.append('action', 'bm_save_publisher'); // WordPress AJAX action
         formData.append('publisher_name', $('#publisher_name').val());
-        formData.append('publisher_email', $('#publisher_email').val());
+        formData.append('publisher_address', $('#publisher_address').val());
         formData.append('publisher_logo', $('#publisher_logo')[0].files[0]);
         formData.append('_wpnonce', BM_AJAX.nonce); // nonce for security
 
@@ -50,8 +50,41 @@ jQuery(document).ready(function($) {
                 if(response.success) {
                     alert('Publisher saved successfully!');
                     $('#publisher_name').val('');
-                    $('#publisher_email').val('');
+                    $('#publisher_address').val('');
                     $('#publisher_logo').val('');
+                } else {
+                    alert('Error: ' + response.data);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('AJAX error: ' + error);
+            }
+        });
+    });
+
+    /*add author*/
+    $('#save_author').on('click', function(e) {
+        e.preventDefault();
+
+        var formData = new FormData();
+        formData.append('action', 'bm_save_author'); // WordPress AJAX action
+        formData.append('author_name', $('#author_name').val());
+        formData.append('author_email', $('#author_email').val());
+        formData.append('author_logo', $('#author_logo')[0].files[0]);
+        formData.append('_wpnonce', BM_AJAX.nonce); // nonce for security
+
+        $.ajax({
+            url: BM_AJAX.ajax_url,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if(response.success) {
+                    alert('Author saved successfully!');
+                    $('#author_name').val('');
+                    $('#author_address').val('');
+                    $('#author_logo').val('');
                 } else {
                     alert('Error: ' + response.data);
                 }

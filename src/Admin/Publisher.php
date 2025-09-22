@@ -31,7 +31,7 @@ class Publisher {
 	                <thead>
 	                    <tr>
 	                        <th>Name</th>
-	                        <th>Email</th>
+	                        <th>Adress</th>
 	                        <th>Logo</th>
 	                        <th>Actions</th>
 	                    </tr>
@@ -39,7 +39,7 @@ class Publisher {
 	                <tbody>
 	                    <?php if (!empty($publishers)) : ?>
 	                        <?php foreach ($publishers as $publisher) : 
-	                            $email = get_post_meta($publisher->ID, 'publisher_email', true);
+	                            $email = get_post_meta($publisher->ID, 'publisher_address', true);
 	                            $logo_id = get_post_meta($publisher->ID, 'publisher_logo', true);
 	                            $logo_url = $logo_id ? wp_get_attachment_url($logo_id) : '';
 	                        ?>
@@ -76,9 +76,12 @@ class Publisher {
 		                    <td><input type="text" name="publisher_name" id="publisher_name" class="regular-text" required></td>
 		                </tr>
 		                <tr>
-		                    <th><label for="publisher_email">Publisher Email</label></th>
-		                    <td><input type="email" name="publisher_email" id="publisher_email" class="regular-text"></td>
-		                </tr>
+						    <th><label for="publisher_address">Publisher Address</label></th>
+						    <td>
+						        <textarea name="publisher_address" id="publisher_address" class="regular-text" rows="5" cols="50"></textarea>
+						    </td>
+						</tr>
+
 		                <tr>
 		                    <th><label for="publisher_logo">Publisher Logo</label></th>
 		                    <td><input type="file" name="publisher_logo" id="publisher_logo"></td>
