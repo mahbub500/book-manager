@@ -2,6 +2,8 @@
 namespace BookManager\Admin;
 use BookManager\Functions\Helpers;
 use BookManager\Admin\Book;
+use BookManager\Admin\Author;
+use BookManager\Admin\Publisher;
 
 class Menu {
     public function register() {
@@ -32,7 +34,9 @@ class Menu {
 
     public function add_admin_menu() {
 
-        $book = new Book();
+        $book       = new Book();
+        $author     = new Author();
+        $publisher  = new Publisher();
 
         // Parent menu
         add_menu_page(
@@ -52,7 +56,7 @@ class Menu {
             __('Publishers', 'book-manager'),
             'manage_options',
             'book-manager-publishers',
-            [$this, 'render_publishers_page']
+            [$publisher, 'render_publishers_page']
         );
 
         // Author submenu
@@ -62,7 +66,7 @@ class Menu {
             __('Authors', 'book-manager'),
             'manage_options',
             'book-manager-authors',
-            [$this, 'render_authors_page']
+            [$author, 'render_authors_page']
         );
         
         // Settings submenu
@@ -98,11 +102,7 @@ class Menu {
         echo '<div class="wrap"><h1>Book Reports</h1><p>Reports content will go here.</p></div>';
     }
 
-    public function render_publishers_page() {
-        echo '<div class="wrap"><h1>Publishers</h1><p>Publisher management will go here.</p></div>';
-    }
+    
 
-    public function render_authors_page() {
-        echo '<div class="wrap"><h1>Authors</h1><p>Author management will go here.</p></div>';
-    }
+    
 }
