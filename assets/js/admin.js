@@ -29,6 +29,47 @@ jQuery(document).ready(function($) {
         });
     });
 
+    /*Save book*/
+
+    $('#save_book').on('click', function(e) {
+        e.preventDefault();
+
+        let formData = new FormData();
+        formData.append('action', 'bm_save_book'); // WordPress AJAX action
+        formData.append('_wpnonce', BM_AJAX.nonce); // Nonce for security
+
+        formData.append('book_name', $('#book_name').val());
+        formData.append('book_author', $('#book_author').val());
+        formData.append('book_publisher', $('#book_publisher').val());
+        formData.append('book_price', $('#book_price').val());
+        formData.append('book_isbn', $('#book_isbn').val());
+        formData.append('book_year', $('#book_year').val());
+        formData.append('book_description', $('#book_description').val());
+
+        if ($('#book_image')[0].files.length > 0) {
+            formData.append('book_image', $('#book_image')[0].files[0]);
+        }
+
+        $.ajax({
+            url: BM_AJAX.ajax_url,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if(response.success) {
+                    alert('✅ Book saved successfully!');
+                    $('#bm-book-form')[0].reset();
+                } else {
+                    alert('❌ Error: ' + response.data);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('⚠️ AJAX error: ' + error);
+            }
+        });
+    });
+
     /*add publisher*/
     $('#save_publisher').on('click', function(e) {
         e.preventDefault();

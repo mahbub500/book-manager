@@ -1,5 +1,7 @@
 <?php
 namespace BookManager\Admin;
+use \BookManager\Admin\Author;
+use \BookManager\Admin\Publisher;
 
 /**
  * Class Book
@@ -10,31 +12,93 @@ namespace BookManager\Admin;
  */
 class Book {
 
-     public function render_list_page() {
-        ?>
-        <div class="wrap">
-            <h1>Book Manager</h1>
+    public function render_list_page() {
+    // Get authors and publishers (assuming you have get_authors() and get_publishers())   
 
-            <!-- Tab Navigation -->
-            <h2 id="book-tabs" class="nav-tab-wrapper">
-                <a href="javascript:void(0);" class="nav-tab nav-tab-active" data-tab="book-list">Book List</a>
-                <a href="javascript:void(0);" class="nav-tab" data-tab="add-book">Add Book</a>
-            </h2>
+    $authors    = get_publishers();
+    $publishers = get_authors();
+    ?>
+    <div class="wrap">
+        <h1>Book Manager</h1>
 
+        <!-- Tab Navigation -->
+        <h2 id="book-tabs" class="nav-tab-wrapper">
+            <a href="javascript:void(0);" class="nav-tab nav-tab-active" data-tab="book-list">Book List</a>
+            <a href="javascript:void(0);" class="nav-tab" data-tab="add-book">Add Book</a>
+        </h2>
 
-            <!-- Tab Content -->
-            <div id="book-list" class="tab-content" style="display:block;">
-                <h3>Book List</h3>
-                <p>List of all books will go here.</p>
-            </div>
-
-            <div id="add-book" class="tab-content" style="display:none;">
-                <h3>Add Book</h3>
-                <p>Add book in main list.</p>
-            </div>
+        <!-- Book List -->
+        <div id="book-list" class="tab-content" style="display:block;">
+            <h3>Book List</h3>
+            <p>List of all books will go here.</p>
         </div>
-        <?php 
-    }
+
+        <!-- Add Book Form -->
+        <div id="add-book" class="tab-content" style="display:none;">
+            <h3>Add Book</h3>
+            <form method="post" enctype="multipart/form-data" id="bm-book-form">
+                <table class="form-table">
+                    <tr>
+                        <th><label for="book_name">Book Name</label></th>
+                        <td><input type="text" name="book_name" id="book_name" class="regular-text" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="book_author">Author</label></th>
+                        <td>
+                            <select name="book_author" id="book_author" required>
+                                <option value="">Select Author</option>
+                                <?php foreach ( $authors as $author ) : ?>
+                                    <option value="<?php echo esc_attr( $author->ID ); ?>">
+                                        <?php echo esc_html( $author->post_title ); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="book_publisher">Publisher</label></th>
+                        <td>
+                            <select name="book_publisher" id="book_publisher" required>
+                                <option value="">Select Publisher</option>
+                                <?php foreach ( $publishers as $publisher ) : ?>
+                                    <option value="<?php echo esc_attr( $publisher->ID ); ?>">
+                                        <?php echo esc_html( $publisher->post_title ); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="book_image">Book Cover</label></th>
+                        <td><input type="file" name="book_image" id="book_image"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="book_price">Price</label></th>
+                        <td><input type="number" step="0.01" name="book_price" id="book_price" class="regular-text" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="book_isbn">ISBN</label></th>
+                        <td><input type="text" name="book_isbn" id="book_isbn" class="regular-text" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="book_year">Publication Year</label></th>
+                        <td><input type="number" name="book_year" id="book_year" class="regular-text" placeholder="2025"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="book_description">Description</label></th>
+                        <td><textarea name="book_description" id="book_description" rows="5" class="large-text"></textarea></td>
+                    </tr>
+                </table>
+
+                <p class="submit">
+                    <input type="submit" name="save_book" id="save_book" class="button button-primary" value="Add Book">
+                </p>
+            </form>
+        </div>
+    </div>
+    <?php 
+}
+
 
     /**
      * Add a new book.
@@ -111,35 +175,7 @@ class Book {
         $query_args = wp_parse_args( $args, $default_args );
 
         return get_posts( $query_args );
-    }
-
-    /**
-     * Get all publishers.
-     *
-     * @return array Array of WP_Post objects.
-     */
-    public function get_publishers() {
-        return get_posts(
-            [
-                'post_type'   => 'publisher',
-                'numberposts' => -1,
-            ]
-        );
-    }
-
-    /**
-     * Get all authors.
-     *
-     * @return array Array of WP_Post objects.
-     */
-    public function get_authors() {
-        return get_posts(
-            [
-                'post_type'   => 'author',
-                'numberposts' => -1,
-            ]
-        );
-    }
+    }    
 
     /**
      * Get single book by ID.

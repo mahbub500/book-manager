@@ -1,5 +1,5 @@
 <?php
-namespace BookManager\Functions;
+namespace BookManager\Trait;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -5,7 +5,7 @@ use BookManager\Admin\Book;
 use BookManager\Admin\Author;
 use BookManager\Admin\Publisher;
 
-use BookManager\Functions\Hook;
+use BookManager\Trait\Hook;
 
 class Menu {
     use Hook;
@@ -15,7 +15,7 @@ class Menu {
     }
 
     public function enqueue_admin_assets( $hook ) {
-        if ( ! in_array( $hook, Helpers::get_allowed_pages() )) {
+        if ( ! in_array( $hook, get_allowed_pages() )) {
             return;
         }
 

@@ -1,7 +1,7 @@
 <?php
 namespace BookManager\Admin;
 
-use BookManager\Functions\Hook;
+use BookManager\Trait\Hook;
 
 /**
  * Class Publisher
