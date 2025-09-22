@@ -1,0 +1,11 @@
+{
+  "name": "mahbub/book-manager",
+  "description": "A simple OOP-based WordPress Book Manager plugin",
+  "type": "wordpress-plugin",
+  "autoload": {
+    "psr-4": {
+      "BookManager\\": "src/"
+    }
+  },
+  "require": {}
+}
