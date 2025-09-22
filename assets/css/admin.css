@@ -1,0 +1,7 @@
+.tab-content { 
+        display: none; 
+}
+        
+.nav-tab-active { 
+        font-weight: bold; 
+}

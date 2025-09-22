@@ -1,43 +1,70 @@
 <?php
 namespace BookManager\Admin;
+use BookManager\Functions\Helpers;
+use BookManager\Admin\Book;
 
 class Menu {
     public function register() {
         add_action('admin_menu', [$this, 'add_admin_menu']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+    }
+
+    public function enqueue_admin_assets( $hook ) {
+        if ( ! in_array( $hook, Helpers::get_allowed_pages() )) {
+            return;
+        }
+
+        wp_enqueue_style(
+            'book-manager-admin',
+            BOOK_MANAGER_URL . 'assets/css/admin.css',
+            [],
+            BOOK_MANAGER_VERSION
+        );
+
+        wp_enqueue_script(
+            'book-manager-admin',
+            BOOK_MANAGER_URL . 'assets/js/admin.js',
+            ['jquery'],
+            BOOK_MANAGER_VERSION,
+            true
+        );
     }
 
     public function add_admin_menu() {
+
+        $book = new Book();
+
         // Parent menu
         add_menu_page(
             __('Book Manager', 'book-manager'),
             __('Book Manager', 'book-manager'),
             'manage_options',
             'book-manager',
-            [$this, 'render_list_page'],
+            [$book, 'render_list_page'],
             'dashicons-book',
             20
         );
 
-        // Add Book submenu
+        // Publisher submenu
         add_submenu_page(
             'book-manager',
-            __('Add Book', 'book-manager'),
-            __('Add Book', 'book-manager'),
+            __('Publishers', 'book-manager'),
+            __('Publishers', 'book-manager'),
             'manage_options',
-            'book-manager-add',
-            [$this, 'render_add_page']
+            'book-manager-publishers',
+            [$this, 'render_publishers_page']
         );
 
-        // List Books submenu
+        // Author submenu
         add_submenu_page(
             'book-manager',
-            __('List Books', 'book-manager'),
-            __('List Books', 'book-manager'),
+            __('Authors', 'book-manager'),
+            __('Authors', 'book-manager'),
             'manage_options',
-            'book-manager',
-            [$this, 'render_list_page']
+            'book-manager-authors',
+            [$this, 'render_authors_page']
         );
-
+        
         // Settings submenu
         add_submenu_page(
             'book-manager',
@@ -48,7 +75,7 @@ class Menu {
             [$this, 'render_settings_page']
         );
 
-        // ✅ Reports submenu
+        // Reports submenu
         add_submenu_page(
             'book-manager',
             __('Reports', 'book-manager'),
@@ -57,76 +84,25 @@ class Menu {
             'book-manager-reports',
             [$this, 'render_reports_page']
         );
-    }
 
-    public function render_add_page() {
-        echo '<div class="wrap"><h1>Add Book</h1><p>Form will go here.</p></div>';
-    }
+        
+    }    
 
-    public function render_list_page() {
-        echo '<div class="wrap"><h1>List Books</h1><p>Book list will go here.</p></div>';
-    }
+   
 
     public function render_settings_page() {
-    ?>
-    <div class="wrap">
-        <h1>Book Manager Settings</h1>
-
-        <!-- Tab Navigation -->
-        <h2 class="nav-tab-wrapper">
-            <a href="javascript:void(0);" class="nav-tab" data-tab="general">General</a>
-            <a href="javascript:void(0);" class="nav-tab" data-tab="advanced">Advanced</a>
-        </h2>
-
-        <!-- Tab Content -->
-        <div id="general" class="tab-content">
-            <h3>General Settings</h3>
-            <p>General settings form goes here.</p>
-        </div>
-
-        <div id="advanced" class="tab-content">
-            <h3>Advanced Settings</h3>
-            <p>Advanced settings form goes here.</p>
-        </div>
-    </div>
-
-    <script type="text/javascript">
-        jQuery(document).ready(function($) {
-            // Function to activate a tab
-            function activateTab(tab) {
-                $('.nav-tab').removeClass('nav-tab-active');
-                $('.tab-content').hide();
-                $('.nav-tab[data-tab="' + tab + '"]').addClass('nav-tab-active');
-                $('#' + tab).show();
-            }
-
-            // Get last active tab from localStorage or default to 'general'
-            var activeTab = localStorage.getItem('book_manager_active_tab') || 'general';
-            activateTab(activeTab);
-
-            // Click event
-            $('.nav-tab').on('click', function(e) {
-                e.preventDefault();
-                var tab = $(this).data('tab');
-                activateTab(tab);
-
-                // Save selected tab in localStorage
-                localStorage.setItem('book_manager_active_tab', tab);
-            });
-        });
-    </script>
-
-    <style>
-        .tab-content { display: none; }
-        .nav-tab-active { font-weight: bold; }
-    </style>
-    <?php
-}
-
-
-
+        echo '<div class="wrap"><h1>Book Settings</h1><p>Settings content will go here.</p></div>';
+    }
 
     public function render_reports_page() {
         echo '<div class="wrap"><h1>Book Reports</h1><p>Reports content will go here.</p></div>';
+    }
+
+    public function render_publishers_page() {
+        echo '<div class="wrap"><h1>Publishers</h1><p>Publisher management will go here.</p></div>';
+    }
+
+    public function render_authors_page() {
+        echo '<div class="wrap"><h1>Authors</h1><p>Author management will go here.</p></div>';
     }
 }
