@@ -1,6 +1,8 @@
 <?php
 namespace BookManager\Functions;
 
+defined( 'ABSPATH' ) || exit;
+
 class Helpers {
 
     /**

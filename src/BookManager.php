@@ -3,6 +3,7 @@ namespace BookManager;
 
 use BookManager\PostTypes\BookPostType;
 use BookManager\Admin\Menu;
+use BookManager\Common\Ajax;
 
 /**
  * Class BookManager
@@ -22,6 +23,7 @@ class BookManager {
         if ( is_admin() ) {
             $this->init_post_types();
             $this->init_admin_menus();
+            $this->init_ajax();
         }
     }
 
@@ -39,5 +41,12 @@ class BookManager {
     protected function init_admin_menus() {
         $menu = new Menu();
         $menu->register();
+    }
+
+    /**
+     * Register Ajax .
+     */
+    protected function init_ajax() {
+        $ajax = new Ajax();
     }
 }

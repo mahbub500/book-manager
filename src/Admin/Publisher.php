@@ -1,6 +1,8 @@
 <?php
 namespace BookManager\Admin;
 
+use BookManager\Functions\Hook;
+
 /**
  * Class Publisher
  *
@@ -9,6 +11,14 @@ namespace BookManager\Admin;
  * @package BookManager\Admin
  */
 class Publisher {
+	use Hook;
+
+
+
+	   
+
+    
+
 
 	public function render_publishers_page() {
 	    ?>
@@ -105,4 +115,7 @@ class Publisher {
 	public function get_publisher( $id ) {
 		return get_post( intval( $id ) );
 	}
+
+	
+
 }

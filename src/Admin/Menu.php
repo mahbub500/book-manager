@@ -5,10 +5,13 @@ use BookManager\Admin\Book;
 use BookManager\Admin\Author;
 use BookManager\Admin\Publisher;
 
+use BookManager\Functions\Hook;
+
 class Menu {
+    use Hook;
     public function register() {
-        add_action('admin_menu', [$this, 'add_admin_menu']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+        $this->action('admin_menu', [$this, 'add_admin_menu']);
+        $this->action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
     }
 
     public function enqueue_admin_assets( $hook ) {
@@ -30,6 +33,11 @@ class Menu {
             BOOK_MANAGER_VERSION,
             true
         );
+
+         wp_localize_script('book-manager-admin', 'BM_AJAX', [
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce'    => wp_create_nonce('bm_publisher_nonce')
+        ]);
     }
 
     public function add_admin_menu() {

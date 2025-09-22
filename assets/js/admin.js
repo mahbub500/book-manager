@@ -24,9 +24,41 @@ jQuery(document).ready(function($) {
         $wrapper.find('.nav-tab').on('click', function(e) {
             e.preventDefault();
             var tab = $(this).data('tab');
-            console.log(tab); // should log both book and publisher tabs
             activateTab($wrapper, tab);
             localStorage.setItem(storageKey, tab);
+        });
+    });
+
+    /*add publisher*/
+    $('#save_publisher').on('click', function(e) {
+        e.preventDefault();
+
+        var formData = new FormData();
+        formData.append('action', 'bm_save_publisher'); // WordPress AJAX action
+        formData.append('publisher_name', $('#publisher_name').val());
+        formData.append('publisher_email', $('#publisher_email').val());
+        formData.append('publisher_logo', $('#publisher_logo')[0].files[0]);
+        formData.append('_wpnonce', BM_AJAX.nonce); // nonce for security
+
+        $.ajax({
+            url: BM_AJAX.ajax_url,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if(response.success) {
+                    alert('Publisher saved successfully!');
+                    $('#publisher_name').val('');
+                    $('#publisher_email').val('');
+                    $('#publisher_logo').val('');
+                } else {
+                    alert('Error: ' + response.data);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('AJAX error: ' + error);
+            }
         });
     });
 
