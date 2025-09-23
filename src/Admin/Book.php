@@ -29,8 +29,8 @@ class Book extends \WP_List_Table {
     public function render_list_page() {
         // Get authors and publishers (assuming you have get_authors() and get_publishers())   
 
-        $authors    = get_authors();
-        $publishers = get_publishers();
+        $authors    = get_bm_posts( 'author' );
+        $publishers = get_bm_posts( 'publisher' );
 
         ?>
         <div class="wrap">
@@ -175,7 +175,7 @@ class Book extends \WP_List_Table {
         $this->_column_headers = [$columns, $hidden, $sortable];
 
         // Get all books
-        $books = get_books();
+        $books = get_bm_posts( 'book' );
 
         // --- Search Filter ---
         $search = !empty($_GET['s']) ? sanitize_text_field($_GET['s']) : '';

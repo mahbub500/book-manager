@@ -72,48 +72,18 @@ if ( ! function_exists( 'pri' ) ) {
 }
 
 /**
- * Get all publishers.
+ * Get all posts by custom post type.
  *
+ * @param string $type Post type.
+ * @param string $status Post status (default: 'publish').
  * @return array Array of WP_Post objects.
  */
-if ( ! function_exists( 'get_publishers' ) ) {
-    function get_publishers() {
+if ( ! function_exists( 'get_bm_posts' ) ) {
+    function get_bm_posts( $type, $status = 'publish' ) {
         return get_posts(
             [
-                'post_type'   => 'publisher',
-                'numberposts' => -1,
-            ]
-        );
-    }
-}
-
-/**
- * Get all authors.
- *
- * @return array Array of WP_Post objects.
- */
-if ( ! function_exists( 'get_authors' ) ) {
-    function get_authors() {
-        return get_posts(
-            [
-                'post_type'   => 'author',
-                'numberposts' => -1,
-            ]
-        );
-    }
-}
-
-/**
- * Get all books.
- *
- * @return array Array of WP_Post objects.
- */
-if ( ! function_exists( 'get_books' ) ) {
-    function get_books() {
-        return get_posts(
-            [
-                'post_type'   => 'book',
-                'post_status'    => 'publish',
+                'post_type'   => $type,
+                'post_status' => $status,
                 'numberposts' => -1,
             ]
         );
