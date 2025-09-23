@@ -86,6 +86,21 @@ class Book extends \WP_List_Table {
                             </td>
                         </tr>
                         <tr>
+                            <th><label for="book_category"><?php esc_html_e('Category', 'book-manager'); ?></label></th>
+                            <td>
+                                <?php
+                                wp_dropdown_categories([
+                                    'taxonomy'         => 'category',
+                                    'name'             => 'book_category',
+                                    'orderby'          => 'name',
+                                    'hide_empty'       => 0,
+                                    'show_option_none' => __('Select Category', 'book-manager'),
+                                ]);
+                                ?>
+                            </td>
+                        </tr>
+
+                        <tr>
                             <th><label for="book_image"><?php esc_html_e( 'Book Cover', 'book-manager' ); ?></label></th>
                             <td><input type="file" name="book_image" id="book_image"></td>
                         </tr>
@@ -107,7 +122,7 @@ class Book extends \WP_List_Table {
                         </tr>
                     </table>
                     <p class="submit">
-                        <input type="submit" name="save_book" class="button button-primary" value="<?php esc_attr_e( 'Add Book', 'book-manager' ); ?>">
+                        <input type="submit" name="save_book" class="button button-primary" id="save_book" value="<?php esc_attr_e( 'Add Book', 'book-manager' ); ?>">
                     </p>
                 </form>
             </div>
@@ -172,6 +187,7 @@ class Book extends \WP_List_Table {
             'title'     => __( 'Book Name', 'book-manager' ),
             'author'    => __( 'Author', 'book-manager' ),
             'publisher' => __( 'Publisher', 'book-manager' ),
+            'category'  => __( 'Category', 'book-manager' ),
             'price'     => __( 'Price', 'book-manager' ),
             'isbn'      => __( 'ISBN', 'book-manager' ),
             'year'      => __( 'Year', 'book-manager' ),
@@ -236,6 +252,14 @@ class Book extends \WP_List_Table {
                     return sprintf( '<img src="%s" width="50" height="50" />', esc_url( $image_url ) );
                 }
                 return __( 'No Image', 'book-manager' );
+            case 'category':
+                $categories = get_the_terms( $item->ID, 'category' );
+                if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
+                    $category_names = wp_list_pluck( $categories, 'name' );
+                    return esc_html( implode( ', ', $category_names ) );
+                }
+                return __( 'Uncategorized', 'book-manager' );
+
             case 'actions':
                 $edit_url   = add_query_arg( [ 'action' => 'edit', 'book_id' => $item->ID ] );
                 $delete_url = wp_nonce_url( add_query_arg( [ 'action' => 'delete', 'book_id' => $item->ID ] ), 'bm_delete_book_' . $item->ID );

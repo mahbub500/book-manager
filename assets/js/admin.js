@@ -44,6 +44,7 @@ jQuery(document).ready(function($) {
         formData.append('book_price', $('#book_price').val());
         formData.append('book_isbn', $('#book_isbn').val());
         formData.append('book_year', $('#book_year').val());
+        formData.append('book_category', $('#book_category').val());
         formData.append('book_description', $('#book_description').val());
 
         if ($('#book_image')[0].files.length > 0) {

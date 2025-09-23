@@ -47,6 +47,8 @@ class Ajax {
 		$price       = floatval( $_POST['book_price'] );
 		$isbn        = sanitize_text_field( wp_unslash( $_POST['book_isbn'] ) );
 		$year        = intval( $_POST['book_year'] );
+		$category_id = !empty( $_POST['book_category'] ) ? intval( $_POST['book_category'] ) : 1;
+
 		$description = sanitize_textarea_field( wp_unslash( $_POST['book_description'] ) );
 
 		// Handle image upload.
@@ -81,6 +83,7 @@ class Ajax {
 		);
 
 		if ( $post_id ) {
+			wp_set_post_terms( $post_id, [$category_id], 'category' );
 			wp_send_json_success( $post_id );
 		} else {
 			wp_send_json_error( __( 'Could not save book.', 'book-manager' ) );

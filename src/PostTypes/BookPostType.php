@@ -11,38 +11,39 @@ class BookPostType {
     // Books CPT
     public function register_book_cpt() {
         register_post_type('book', [
-            'label' => 'Books',
-            'public' => true,
-            'show_ui' => false,
-            'menu_icon' => 'dashicons-book',
-            'supports' => ['title', 'editor', 'thumbnail'],
+            'label' 		=> 'Books',
+            'public' 		=> true,
+            'show_ui' 		=> false,
+            'menu_icon' 	=> 'dashicons-book',
+            'supports'		=> ['title', 'editor', 'thumbnail'],
+            'taxonomies'	=> ['category'],
         ]);
 
         // Publisher taxonomy
         register_taxonomy('publisher', 'book', [
-            'label' => 'Publisher',
-            'public' => true,
-            'hierarchical' => true,
-            'show_ui' => false,
+            'label' 		=> 'Publisher',
+            'public' 		=> true,
+            'hierarchical' 	=> true,
+            'show_ui' 		=> false,
         ]);
 
         // Author taxonomy
         register_taxonomy('book_author', 'book', [
-            'label' => 'Author',
-            'public' => true,
-            'hierarchical' => true,
-            'show_ui' => false,
+            'label' 		=> 'Author',
+            'public' 		=> true,
+            'hierarchical' 	=> true,
+            'show_ui' 		=> false,
         ]);
     }
 
     // Publisher CPT
     public function register_publisher_cpt() {
         register_post_type('publisher', [
-            'label' => 'Publishers',
-            'public' => true,
-            'show_ui' => false,
-            'menu_icon' => 'dashicons-building',
-            'supports' => ['title'],
+            'label' 		=> 'Publishers',
+            'public' 		=> true,
+            'show_ui' 		=> false,
+            'menu_icon' 	=> 'dashicons-building',
+            'supports' 		=> ['title'],
         ]);
     }
 
