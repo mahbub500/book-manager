@@ -175,6 +175,12 @@ class Book extends \WP_List_Table {
            <?php 
             exit;
         }
+
+        if ($action === 'edit' && !empty($_GET['book_id'])) {
+            $book_id = intval($_GET['book_id']);
+            $this->render_edit_form($book_id);
+            exit;
+        }
     }
 
     /**
@@ -336,4 +342,110 @@ class Book extends \WP_List_Table {
             'total_pages' => ceil( $total_items / $per_page ),
         ] );
     }
+
+    protected function render_edit_form( $book_id ) {
+        $book = get_post($book_id);
+        if (!$book) return;
+
+        $authors    = get_bm_posts('author');
+        $publishers = get_bm_posts('publisher');
+        $category   = wp_get_post_terms($book_id, 'category', ['fields' => 'ids'])[0] ?? '';
+
+        ?>
+        <div class="wrap">
+            <h1><?php esc_html_e('Edit Book', 'book-manager'); ?></h1>
+            <form method="post" enctype="multipart/form-data" id="bm-book-form">
+                <input type="hidden" name="book_id" value="<?php echo esc_attr($book_id); ?>">
+                <table class="form-table">
+                    <tr>
+                        <th><label for="book_name"><?php esc_html_e('Book Name', 'book-manager'); ?></label></th>
+                        <td><input type="text" name="book_name" id="book_name" class="regular-text" value="<?php echo esc_attr($book->post_title); ?>" required></td>
+                    </tr>
+                    <tr>
+                        <th><label for="book_author"><?php esc_html_e('Author', 'book-manager'); ?></label></th>
+                        <td>
+                            <select name="book_author" id="book_author" required>
+                                <option value=""><?php esc_html_e('Select Author', 'book-manager'); ?></option>
+                                <?php foreach ($authors as $author): ?>
+                                    <option value="<?php echo esc_attr($author->ID); ?>" <?php selected(get_post_meta($book_id,'book_author',true), $author->ID); ?>>
+                                        <?php echo esc_html($author->post_title); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="book_publisher"><?php esc_html_e('Publisher', 'book-manager'); ?></label></th>
+                        <td>
+                            <select name="book_publisher" id="book_publisher" required>
+                                <option value=""><?php esc_html_e('Select Publisher', 'book-manager'); ?></option>
+                                <?php foreach ($publishers as $publisher): ?>
+                                    <option value="<?php echo esc_attr($publisher->ID); ?>" <?php selected(get_post_meta($book_id,'book_publisher',true), $publisher->ID); ?>>
+                                        <?php echo esc_html($publisher->post_title); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="book_category"><?php esc_html_e('Category', 'book-manager'); ?></label></th>
+                        <td>
+                            <?php
+                            wp_dropdown_categories([
+                                'taxonomy'         => 'category',
+                                'name'             => 'book_category',
+                                'orderby'          => 'name',
+                                'hide_empty'       => 0,
+                                'show_option_none' => __('Select Category', 'book-manager'),
+                                'selected'         => $category,
+                            ]);
+                            ?>
+                        </td>
+                    </tr>
+                    <!-- Add other fields like image, price, isbn, year, description as in add form -->
+                </table>
+                <p class="submit">
+                    <input type="submit" name="update_book" class="button button-primary" value="<?php esc_attr_e('Update Book', 'book-manager'); ?>">
+                </p>
+            </form>
+        </div>
+        <?php
+
+        if ( ! empty($_POST['update_book']) && ! empty($_POST['book_id']) ) {
+            $book_id = intval($_POST['book_id']);
+            
+            $post_data = [
+                'ID'           => $book_id,
+                'post_title'   => sanitize_text_field($_POST['book_name']),
+                'post_content' => sanitize_textarea_field($_POST['book_description']),
+            ];
+            
+            wp_update_post($post_data);
+
+            // Update post meta
+            update_post_meta($book_id, 'book_author', intval($_POST['book_author']));
+            update_post_meta($book_id, 'book_publisher', intval($_POST['book_publisher']));
+            update_post_meta($book_id, 'book_price', floatval($_POST['book_price']));
+            update_post_meta($book_id, 'book_isbn', sanitize_text_field($_POST['book_isbn']));
+            update_post_meta($book_id, 'book_year', intval($_POST['book_year']));
+
+            // Update category
+            if (!empty($_POST['book_category'])) {
+                wp_set_post_terms($book_id, [intval($_POST['book_category'])], 'category');
+            }
+
+            // Handle image update (optional)
+            if (!empty($_FILES['book_image']['name'])) {
+                $attachment_id = media_handle_upload('book_image', $book_id);
+                if (!is_wp_error($attachment_id)) {
+                    update_post_meta($book_id, 'book_image', $attachment_id);
+                }
+            }
+
+            wp_redirect(add_query_arg(['page' => 'book-manager', 'updated' => 1], admin_url('admin.php')));
+            exit;
+        }
+
+    }
+
 }
